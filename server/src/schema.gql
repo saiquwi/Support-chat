@@ -1,0 +1,137 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type AuthResponse {
+  accessToken: String!
+  refreshToken: String
+  user: User!
+}
+
+type Chat {
+  createdAt: String!
+  id: ID!
+  isActive: Boolean!
+  lastMessage: Message
+  messages: [Message!]!
+  participants: [User!]
+  title: String
+  type: ChatType!
+  unreadCount: Float!
+  updatedAt: String!
+}
+
+enum ChatType {
+  DIRECT
+  GROUP
+  SUPPORT
+}
+
+input CreateChatInput {
+  participantIds: [String!] = []
+  title: String
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+type Message {
+  chat: Chat!
+  content: String!
+  createdAt: String!
+  editedAt: String
+  id: ID!
+  isDeleted: Boolean!
+  isEdited: Boolean!
+  readAt: String
+  sender: User!
+  status: MessageStatus!
+}
+
+enum MessageStatus {
+  DELIVERED
+  READ
+  SENT
+}
+
+type Mutation {
+  createChat(createChatInput: CreateChatInput!): Chat!
+  createSupportChat(supportAgentId: String): Chat!
+  deleteChat(id: String!): Boolean!
+  login(loginInput: LoginInput!): AuthResponse!
+  logout: Boolean!
+  markMultipleAsRead(ids: [String!]!): Boolean!
+  refreshToken(refreshToken: String!): AuthResponse!
+  register(registerInput: RegisterInput!): AuthResponse!
+  sendMessage(sendMessageInput: SendMessageInput!): Message!
+  updateUserStatus(status: UserStatus!): User!
+}
+
+type Query {
+  activeSupportChats: [Chat!]!
+  chat(id: String!): Chat!
+  chatMessages(chatId: String!, limit: Float = 50): [Message!]!
+  getSupportChats: [Chat!]!
+  me: User!
+  myChats: [Chat!]!
+  onlineUsers: [User!]!
+  searchUsers(query: String!): [User!]!
+  supportAgents: [User!]!
+  unreadMessages: [Message!]!
+  users: [User!]!
+  validateAuth: Boolean!
+}
+
+input RegisterInput {
+  email: String!
+  password: String!
+  role: UserRole = CLIENT
+  username: String!
+}
+
+input SendMessageInput {
+  chatId: String!
+  content: String!
+}
+
+type Subscription {
+  chatCreated(userId: String!): Chat!
+  chatStatusChanged(userId: String!): Chat!
+  chatUpdated(userId: String!): Chat!
+  messageSent(chatId: String!): Message!
+  messageStatusChanged(chatId: String!): Message!
+  newMessage(userId: String!): Message!
+  userPresenceChanged: User!
+  userStatusChanged: User!
+}
+
+type User {
+  avatarUrl: String
+  createdAt: DateTime!
+  email: String!
+  id: ID!
+  lastSeen: String
+  role: UserRole!
+  status: UserStatus!
+  updatedAt: DateTime!
+  username: String!
+}
+
+enum UserRole {
+  ADMIN
+  CLIENT
+  SUPPORT
+}
+
+enum UserStatus {
+  AWAY
+  OFFLINE
+  ONLINE
+}

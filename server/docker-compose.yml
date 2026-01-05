@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: support-chat-db
+    environment:
+      POSTGRES_USER: admin_lab8
+      POSTGRES_PASSWORD: 1234lab8
+      POSTGRES_DB: wslab8
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    command: 
+      - "postgres"
+      - "-c"
+      - "listen_addresses=*"
+      - "-c"
+      - "password_encryption=md5"
+
+volumes:
+  postgres_data:
